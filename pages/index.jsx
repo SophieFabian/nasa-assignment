@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 
 import React, { useEffect, useState } from "react";
+import Timer from "./timer";
 
 export default function Home() {
   const NASA_PHOTOS_API =
@@ -8,23 +9,20 @@ export default function Home() {
 
   const [photos, setPhotos] = useState(null);
   const [error, setError] = useState(null);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       const curiosityResponse = await fetch(NASA_PHOTOS_API);
       const curiosityImages = await curiosityResponse.json();
-      console.log(
-        "🚀 ~ file: index.jsx:16 ~ fetchData ~ curiosityImages:",
-        curiosityImages
-      );
       let error = null;
       let curiosityPhotos = null;
       if (curiosityImages.error) {
         error = curiosityImages.error.message;
       } else {
-        curiosityPhotos = curiosityImages.map((photo) => {
+        curiosityPhotos = curiosityImages.photos.map((photo) => {
           return {
-            date: photo.date,
+            date: photo.earth_date,
             id: photo.id,
             img_source: photo.img_src,
           };
@@ -35,9 +33,21 @@ export default function Home() {
     };
     fetchData();
   }, []);
-  console.log("ERROR", error);
+
+  // unrelated timer function
+  // setTimeout(() => {
+  //   console.log("count is", count);
+  // }, 5000);
+
+  // const handleIncrease = () => {
+  //   console.log("handleIncrease", count);
+  //   setCount(count + 1);
+  // };
+
   return (
     <>
+      {/* <div>{count}</div> */}
+      {/* <Timer handleIncrease={handleIncrease} /> */}
       <header></header>
       <main className="page">
         <div>
@@ -78,7 +88,8 @@ export default function Home() {
           </div>
           <div>
             <h3>
-              Curiosity rover images <span>from today</span>
+              Curiosity rover images{" "}
+              <span style={{ color: "#c1bbaf" }}>from today</span>
             </h3>
             <div
               id="images"

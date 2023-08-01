@@ -11,22 +11,24 @@ const Weather = () => {
     fetch(NASA_WEATHER_URL)
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("CALLING WEATHER", data);
         const weatherData = data.sol_keys.map((key) => {
           const entry = data[key];
+          const firstDate = new Date(entry.First_UTC).toISOString().split("T");
+          const firstUTCString = `${firstDate[0]} ${
+            firstDate[1].split(".")[0]
+          }`;
+          const lastDate = new Date(entry.First_UTC).toISOString().split("T");
+          const lastUTCString = `${firstDate[0]} ${firstDate[1].split(".")[0]}`;
           return {
             datapoint: key,
             temperature: entry.AT.av,
             wind: entry.HWS.av,
             pressure: entry.PRE.av,
-            first_UTC: entry.First_UTC,
-            last_UTC: entry.Last_UTC,
+            first_UTC: firstUTCString,
+            last_UTC: lastUTCString,
           };
         });
         setWeatherData(weatherData);
-        // setCoins(json.coins);
-        // setHasNext(json.hasNext);
-        // coinsHistory[currentPage] = coins;
       });
   }, []);
 
@@ -52,6 +54,9 @@ const Weather = () => {
             </div>
           ))}
       </div>
+      <a className="nav-button" href="/">
+        Home
+      </a>
     </div>
   );
 };
